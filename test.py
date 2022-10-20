@@ -1,12 +1,60 @@
 import bluetooth
+import asyncio
+import time
 
-bd_addr = "B0:FC:36:F5:C3:F0"
+temp = {
+    's_temp': 0.0,
+    's_incline': 0.0,
+    'a_engine_power': 0,
+    'a_engine_angle': 0.0,
+    'a_sail_angle': 0.0,
+    'a_flaperon_angle': 0.0}
+'''
+0 - s_temp -- температруа
+1 - s_incline -- крен
+2 - a_engine_power -- мощность двигателя в (0-100%)
+3 - a_engine_angle -- поворот двигателя (-90 - 0 - 90)
+4 - a_sail_angle - поворот паруса (-90 - 0 - 90)
+5 - a_flaperon_angle - поворот флаперона (-90 - 0 - 90)
+'''
+s_temp = 0.0
+s_incline = 0.0
+data=(f"engine_power:{str(1)}||engine_angle:{str(1.0)}||sail_angle:{str(1.0)}||flaperon_angle:{str(1.0)}")
 
-port = 1
+async def connect_to_server():
+    try:
+        server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        port = 1
+        server_sock.bind(("", port))
+        server_sock.listen(1)
+        await main()
+    except:
+        print("Server connection error\nRetry after 5 seconds")
+        await asyncio.sleep(5)
+        await connect_to_server()
 
-sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-sock.connect((bd_addr, port))
+async def main():
+    temp['s_temp'] = 0.1452
+    while True:
+        global a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle
+        client_sock, address = server_sock.accept()
+        data = client_sock.recv(1024)
+        print(f'From : {address}')
+        a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle = map(str, data.split("||"))
+        a_engine_power = int(a_engine_power.partition(':')[-1])
+        a_engine_angle = float(a_engine_angle.partition(':')[-1]) * 9
+        a_sail_angle = float(a_sail_angle.partition(':')[-1]) * 9
+        a_flaperon_angle = float(a_flaperon_angle.partition(':')[-1]) * 9
+        if s_temp != temp['s_temp'] or s_incline != temp['s_incline'] or a_engine_power != temp['a_engine_power'] or a_engine_angle != temp['a_engine_angle'] or a_sail_angle != temp['a_sail_angle'] or a_flaperon_angle != ['a_flaperon_angle']:
+            await update_temp()
 
-sock.send("I am alive!")
+async def update_temp():
+        temp['s_temp'] = s_temp
+        temp['s_incline'] = s_incline
+        temp['a_engine_power'] = a_engine_power
+        temp['a_engine_angle'] = a_engine_angle
+        temp['a_sail_angle'] = a_sail_angle
+        temp['a_flaperon_angle'] = a_flaperon_angle
+        print(temp)
 
-sock.close()
+asyncio.run(connect_to_server())
