@@ -1,6 +1,5 @@
 import bluetooth
 import asyncio
-import time
 
 temp = {
     's_temp': 0.0,
@@ -17,21 +16,18 @@ temp = {
 4 - a_sail_angle - поворот паруса (-90 - 0 - 90)
 5 - a_flaperon_angle - поворот флаперона (-90 - 0 - 90)
 '''
+
+
 s_temp = 0.0
 s_incline = 0.0
 data=(f"engine_power:{str(1)}||engine_angle:{str(1.0)}||sail_angle:{str(1.0)}||flaperon_angle:{str(1.0)}")
 
-async def connect_to_server():
-    try:
-        server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-        port = 1
-        server_sock.bind(("", port))
-        server_sock.listen(1)
-        await main()
-    except:
-        print("Server connection error\nRetry after 5 seconds")
-        await asyncio.sleep(5)
-        await connect_to_server()
+
+server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+port = 1
+server_sock.bind(("", port))
+server_sock.listen(1)
+
 
 async def main():
     temp['s_temp'] = 0.1452
@@ -57,4 +53,4 @@ async def update_temp():
         temp['a_flaperon_angle'] = a_flaperon_angle
         print(temp)
 
-asyncio.run(connect_to_server())
+asyncio.run(main())
