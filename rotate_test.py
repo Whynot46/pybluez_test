@@ -2,7 +2,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 #import bluetooth
 
-mac_addr = '' # mac-адрес компа
+mac_addr = 'B0:FC:36:F5:C3:F0' # mac-адрес компа
 #bd_addr = "B8:27:EB:97:86:BF"
 port = 1
 
