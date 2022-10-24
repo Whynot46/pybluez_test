@@ -1,0 +1,23 @@
+<test_screen@MDLabel>:
+    BoxLayout:
+        MDSlider:
+            orientation:'vertical'
+            id: temp_slider
+            min: 0
+            max: 360
+            step: 1
+            value: 0
+            disabled: False
+            on_touch_move:
+                root.send_data()
+
+        MDSlider:
+            orientation:'vertical'
+            id: incline_slider
+            min: -90
+            max: 90
+            step: 1
+            value: 0
+            disabled: False
+            on_touch_move:
+                root.send_data()
