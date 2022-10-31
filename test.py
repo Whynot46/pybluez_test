@@ -36,7 +36,8 @@ async def main():
         client_sock, address = server_sock.accept()
         data = client_sock.recv(1024)
         print(f'From : {address}')
-        a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle = map(data.split("||"))
+        data = str(data)
+        a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle = map(str, data.split("||"))
         a_engine_power = int(a_engine_power.partition(':')[-1])
         a_engine_angle = float(a_engine_angle.partition(':')[-1]) * 9
         a_sail_angle = float(a_sail_angle.partition(':')[-1]) * 9
