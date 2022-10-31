@@ -38,6 +38,7 @@ async def main():
         print(f'From : {address}')
         data = str(data)
         a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle = map(str, data.split("||"))
+        print(f'data: {data}')
         a_engine_power = int(a_engine_power.partition(':')[-1])
         a_engine_angle = float(a_engine_angle.partition(':')[-1]) * 9
         a_sail_angle = float(a_sail_angle.partition(':')[-1]) * 9
