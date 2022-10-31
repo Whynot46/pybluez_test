@@ -35,14 +35,12 @@ async def main():
         global a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle
         client_sock, address = server_sock.accept()
         data = str(client_sock.recv(1024))
-        print(f'From : {address}')
         a_engine_power, a_engine_angle, a_sail_angle, a_flaperon_angle = map(str, data.split("||"))
-        print(f'data: {data}')
         a_engine_power = int(a_engine_power.partition(':')[-1])
         a_engine_angle = float(a_engine_angle.partition(':')[-1]) * 9
-        a_sail_angle = float(a_sail_angle.partition(':')[-1].partition("'")[0]) * 9
-        print(a_flaperon_angle)
-        a_flaperon_angle = float(a_flaperon_angle.partition(':')[-1]) * 9
+        a_sail_angle = float(a_sail_angle.partition(':')[-1]) * 9
+        a_flaperon_angle = float(a_flaperon_angle.partition(':')[-1].partition("'")[0]) * 9
+        client_sock.send(data)
         if s_temp != temp['s_temp'] or s_incline != temp['s_incline'] or a_engine_power != temp['a_engine_power'] or a_engine_angle != temp['a_engine_angle'] or a_sail_angle != temp['a_sail_angle'] or a_flaperon_angle != temp['a_flaperon_angle']:
             await update_temp()
 
